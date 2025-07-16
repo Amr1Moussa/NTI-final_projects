@@ -8,8 +8,6 @@ An interactive digit recognition app that lets you draw digits (0–9) on a canv
 
 This project demonstrates handwritten digit classification using the MNIST dataset. An MLP classifier is trained and deployed with a simple Gradio interface for real-time inference via a sketchpad input.
 
-![demo](https://github.com/user-attachments/assets/8b20a48f-c4ae-430f-9510-bd681958ea8a)
-
 ---
 
 ## 🧠 Model Details
