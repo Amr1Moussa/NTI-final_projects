@@ -122,8 +122,4 @@ pip install numpy gradio pillow scikit-learn joblib
 
 ```
 
----
-
-Let me know if you want this as a downloadable `.md` file or to include model training in the repo.
-```
 
