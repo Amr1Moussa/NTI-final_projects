@@ -131,5 +131,3 @@ matplotlib
 ## 📃 License
 
 MIT License — use freely, contribute openly, credit kindly.
-
-````
