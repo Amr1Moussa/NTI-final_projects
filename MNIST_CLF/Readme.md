@@ -108,7 +108,7 @@ pip install numpy gradio pillow scikit-learn joblib
 
 ## ✨ Credits
 
-* MNIST dataset from \[scikit-learn or tensorflow\.keras.datasets]
+* MNIST dataset from \[tensorflow\.keras.datasets]
 * UI built with [Gradio](https://gradio.app/)
 * Model trained with [scikit-learn](https://scikit-learn.org)
 
