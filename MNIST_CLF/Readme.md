@@ -121,5 +121,3 @@ pip install numpy gradio pillow scikit-learn joblib
 * Integrate training pipeline into the app
 
 ```
-
-
