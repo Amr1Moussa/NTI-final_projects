@@ -1,82 +1,76 @@
-import external.streamlit as st
+import streamlit as st
 import numpy as np
-from PIL import Image, ImageOps
 import tensorflow as tf
+import pandas as pd
+from PIL import Image
 from io import StringIO
+
+# ========== Configuration ==========
+st.set_page_config(page_title="Garbage Classifier", layout="centered")
 
 # ========== Load Model ==========
 @st.cache_resource
-def load_model():
-    model = tf.keras.models.load_model("my_model.keras")
-    return model
+def load_model() -> tf.keras.Model:
+    """Loads and caches the trained Keras model."""
+    return tf.keras.models.load_model("my_model.keras")
 
 model = load_model()
 
-# ========== Class Labels ==========
-# Replace with your actual class names if needed
+# ========== Class Names ==========
 class_names = [
-    'battery',
-    'biological',
-    'cardboard',
-    'clothes',
-    'glass',
-    'metal',
-    'paper',
-    'plastic',
-    'shoes',
-    'trash'
-] 
+    'battery', 'biological', 'cardboard', 'clothes', 'glass',
+    'metal', 'paper', 'plastic', 'shoes', 'trash'
+]
 
 # ========== Sidebar ==========
 st.sidebar.title("⚙️ Options")
 st.sidebar.markdown("""
 Upload an image for classification.
-- Supported formats: JPG, PNG, JPEG
-- Input image will be resized to 224x224
+
+- Formats: JPG, PNG, JPEG  
+- Images will be resized to 224×224 before prediction.
 """)
 
 if st.sidebar.button("Show Model Summary"):
-    string_io = StringIO()
-    model.summary(print_fn=lambda x: string_io.write(x + "\n"))
-    summary_string = string_io.getvalue()
+    buffer = StringIO()
+    model.summary(print_fn=lambda line: buffer.write(line + "\n"))
     st.sidebar.subheader("📋 Model Architecture")
-    st.sidebar.text(summary_string)
+    st.sidebar.text(buffer.getvalue())
 
-# ========== Main Title ==========
+# ========== Main Interface ==========
 st.title("🧠 Garbage Classifier App")
-st.markdown("Upload an image, and the model will predict the class.")
+st.markdown("Upload an image and the model will predict the type of garbage.")
 
-# ========== File Upload ==========
-uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
+uploaded_file = st.file_uploader("📤 Upload Image", type=["jpg", "jpeg", "png"])
 
 # ========== Preprocessing ==========
-target_size = (224, 224)
-
-def preprocess_image(img):
+def preprocess_image(img: Image.Image, target_size=(224, 224)) -> np.ndarray:
+    """Resizes and normalizes the image."""
     img = img.resize(target_size)
     img_array = tf.keras.preprocessing.image.img_to_array(img)
     img_array = img_array / 255.0
     return np.expand_dims(img_array, axis=0)
 
-# ========== Inference ==========
-if uploaded_file is not None:
+# ========== Prediction ==========
+if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
-    
-    # Show uploaded image
     st.image(image, caption="📷 Uploaded Image", use_column_width=True)
 
-    # Preprocess and predict
-    processed = preprocess_image(image)
-    prediction = model.predict(processed)[0]
-    predicted_index = np.argmax(prediction)
+    # Preprocess & predict
+    input_tensor = preprocess_image(image)
+    predictions = model.predict(input_tensor)[0]
+
+    predicted_index = np.argmax(predictions)
     predicted_class = class_names[predicted_index]
-    confidence = prediction[predicted_index] * 100
+    confidence = predictions[predicted_index] * 100
 
-    # Show result
     st.markdown(f"### 🎯 Prediction: `{predicted_class}`")
-    st.markdown(f"**Confidence:** {confidence:.2f}%")
+    st.markdown(f"**Confidence:** `{confidence:.2f}%`")
 
-    # Display all class probabilities in a table
+    # Show all class probabilities
     st.subheader("📊 Class Probabilities")
-    prob_dict = {class_names[i]: float(f"{prediction[i]:.4f}") for i in range(len(class_names))}
-    st.dataframe(prob_dict, use_container_width=True)
+    prob_df = pd.DataFrame({
+        "Class": class_names,
+        "Probability": [f"{p:.4f}" for p in predictions]
+    })
+    st.dataframe(prob_df, use_container_width=True)
