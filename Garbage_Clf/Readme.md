@@ -8,7 +8,6 @@ An interactive web app for classifying waste images into **10 distinct categorie
 
 Upload an image and instantly get a class prediction with confidence and full class-wise probabilities.
 
-![demo-screenshot](https://github.com/user-attachments/assets/63edd2cf-0b19-4212-aec3-88c1f3180d75)
 ![demo-screenshot](https://github.com/user-attachments/assets/b10da05a-33e3-46b1-9468-bc0b88823414)
 
 ---
