@@ -40,8 +40,9 @@ NTI-final_projects/
 
 - **Python** 🐍
 - **TensorFlow / Keras** – Deep learning framework
+- **scikit-learn** – Image handling and preprocessing
 - **NumPy, Pandas** – Data manipulation
-- **Matplotlib / Seaborn** – Visualization
+- **Matplotlib** – Visualization
 - **Jupyter Notebook** – Interactive experimentation
 - **PI** – Image handling and preprocessing
 
