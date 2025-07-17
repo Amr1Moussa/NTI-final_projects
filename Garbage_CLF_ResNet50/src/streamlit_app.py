@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from PIL import Image
 import numpy as np
@@ -8,13 +9,14 @@ from io import StringIO
 
 
 
-# ========== Load Model ==========
-@st.cache_resource
-def load_model():
-    model = tf.keras.models.load_model("models\\model.keras")
-    return model
+# ========== Load Model ========== 
+MODEL_PATH = os.path.join("src", "models", "model.h5") # This is the current correct path
 
-model = load_model()
+if not os.path.exists(MODEL_PATH):
+    st.error(f"Model file not found at: {MODEL_PATH}")
+    st.stop()
+
+model = tf.keras.models.load_model(MODEL_PATH)
 
 # ========== Class Labels ==========
 # Replace with your actual class names if needed
@@ -45,14 +47,14 @@ uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 # ========== Preprocessing ==========
 IMG_SIZE = (224, 224)
 def preprocess_image(img):
-    return preprocess_input(np.expand_dims(img_to_array(img.resize(IMG_SIZE)), axis=0))
+    return preprocess_input(np.expand_dims(img_to_array(img.convert("RGB").resize(IMG_SIZE)), axis=0))
 
 # ========== Inference ==========
 if uploaded_file is not None:
     image = Image.open(uploaded_file).convert("RGB")
     
     # Show uploaded image
-    st.image(image, caption="📷 Uploaded Image", use_column_width=True)
+    st.image(image, caption="📷 Uploaded Image", use_container_width=True)
 
     # Preprocess and predict
     processed = preprocess_image(image)
