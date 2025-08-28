@@ -38,7 +38,7 @@ NTI-final_projects/
 
 ## 🛠️ Technologies Used
 
-- **Python** 🐍
+- **Python** 
 - **TensorFlow / Keras** – Deep learning framework
 - **scikit-learn** – Image handling and preprocessing
 - **NumPy, Pandas** – Data manipulation
